@@ -1,16 +1,11 @@
-/* ══════════════════════════════════════════════
-   GASTOS APP — script.js
-   Reemplaza localStorage con Supabase Auth + DB
-   ══════════════════════════════════════════════ */
-
-/* ─────────────────────────────────────────────
-   ⚠️  CONFIGURACIÓN — COMPLETAR CON TUS DATOS
-   Supabase → Project Settings → API
-   ───────────────────────────────────────────── */
 const SUPABASE_URL  = 'https://vkmzhmkvnrrggncnzwqs.supabase.co';   
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrbXpobWt2bnJyZ2duY256d3FzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0OTI0NTgsImV4cCI6MjA5NjA2ODQ1OH0.U-HriHeg69z4CFx4PmiSWN8FroVcfTcxYy_j5Obw-AA';            
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+   auth: {
+    persistSession: false
+  }
+});
 
 /* ─────────── CONFIG ─────────── */
 const EMOJIS = ['🏷','⚡','🛒','🍎','🚗','💊','🏠','🎓','🎬','👗','🐾','✈️','🍔','☕','🔧','📱','💡','🎮','🏋️','📚','💼','🎁','🌿','🏥','🚌','⛽','🍕','🧾','💈','💰','🎵','🖥️','🐶','👶','🌊','🏖️','🍷','🎂','🔑','🏋'];
