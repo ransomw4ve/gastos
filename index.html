@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control de Gastos</title>
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="apple-touch-icon" sizes="512x512" href="assets/favicon.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/favicon.png">
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     PANTALLA DE AUTH (login / registro)
+     ══════════════════════════════════ -->
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="logo-icon" style="width:44px;height:44px;border-radius:10px">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+        </svg>
+      </div>
+      <div>
+        <div style="font-size:20px;font-weight:700">Control de Gastos</div>
+        <div style="font-size:13px;color:var(--text2)">Tu dinero, bajo control</div>
+      </div>
+    </div>
+
+    <!-- Tabs login / registro -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login"   onclick="switchTab('login')">Iniciar sesión</button>
+      <button class="auth-tab"        id="tab-register" onclick="switchTab('register')">Registrarse</button>
+    </div>
+
+    <!-- Mensaje de error/info -->
+    <div class="auth-msg" id="auth-msg"></div>
+
+    <!-- Login -->
+    <div id="form-login">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-ctrl" id="login-email" placeholder="tu@email.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <input type="password" class="form-ctrl" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-top:8px" id="btn-login" onclick="doLogin()">
+        Entrar
+      </button>
+      <button class="btn-link" onclick="doForgot()">¿Olvidaste tu contraseña?</button>
+    </div>
+
+    <!-- Registro -->
+    <div id="form-register" style="display:none">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-ctrl" id="reg-email" placeholder="tu@email.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <input type="password" class="form-ctrl" id="reg-pass" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Repetir contraseña</label>
+        <input type="password" class="form-ctrl" id="reg-pass2" placeholder="Repetir contraseña" autocomplete="new-password">
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-top:8px" id="btn-register" onclick="doRegister()">
+        Crear cuenta
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     APP PRINCIPAL (se muestra tras login)
+     ══════════════════════════════════ -->
+<div id="app-screen" style="display:none">
+<div class="shell">
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-text">
+      <div class="logo-icon">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+      </div>
+      <span>Gastos</span>
+    </div>
+  </div>
+  <nav class="nav">
+    <button class="nav-item active" onclick="goTo('gastos',this)">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+      <span>Gastos</span>
+    </button>
+    <button class="nav-item" onclick="goTo('graficos',this)">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+      <span>Gráficos</span>
+    </button>
+    <button class="nav-item" onclick="goTo('categorias',this)">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg>
+      <span>Categorías</span>
+    </button>
+    <button class="nav-item" onclick="goTo('datos',this)">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7C5 4 4 5 4 7z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 11h6M9 15h4"/></svg>
+      <span>Datos</span>
+    </button>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="user-info" id="user-info"></div>
+    <button class="theme-btn" onclick="toggleTheme()">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+      <span id="theme-label">Modo oscuro</span>
+    </button>
+    <button class="theme-btn" onclick="doLogout()" style="color:var(--danger)">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+      <span>Cerrar sesión</span>
+    </button>
+  </div>
+</aside>
+
+<main class="main">
+
+  <!-- GASTOS -->
+  <div id="page-gastos" class="page active">
+    <div class="page-title">Mis Gastos</div>
+    <div class="page-subtitle" id="period-label">Todos los períodos</div>
+    <div class="stats">
+      <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value red" id="s-total">$0</div></div>
+      <div class="stat-card"><div class="stat-label">Registros</div><div class="stat-value" id="s-count">0</div></div>
+      <div class="stat-card"><div class="stat-label">Promedio</div><div class="stat-value blue" id="s-avg">$0</div></div>
+      <div class="stat-card"><div class="stat-label">Mayor</div><div class="stat-value" id="s-max">$0</div></div>
+    </div>
+    <div class="filters">
+      <select id="f-year" onchange="renderList()"></select>
+      <select id="f-month" onchange="renderList()"></select>
+      <select id="f-cat" onchange="renderList()"></select>
+      <input type="search" class="search-input" id="f-search" placeholder="🔍 Buscar..." oninput="renderList()">
+    </div>
+    <div class="expense-list" id="expense-list"></div>
+  </div>
+
+  <!-- GRÁFICOS -->
+  <div id="page-graficos" class="page">
+    <div class="page-title">Gráficos</div>
+    <div class="page-subtitle">Análisis visual de tus gastos</div>
+    <div class="filters">
+      <select id="gf-year" onchange="renderCharts()"></select>
+      <select id="gf-month" onchange="renderCharts()"></select>
+      <select id="gf-cat" onchange="renderCharts()"></select>
+    </div>
+    <div class="stats" style="grid-template-columns:repeat(3,1fr)">
+      <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value red" id="g-total">$0</div></div>
+      <div class="stat-card"><div class="stat-label">Mayor</div><div class="stat-value" id="g-max">$0</div></div>
+      <div class="stat-card"><div class="stat-label">Menor</div><div class="stat-value" id="g-min">$0</div></div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card full"><div class="chart-title">Evolución mensual</div><div class="monthly-chart" id="chart-monthly"></div></div>
+      <div class="chart-card"><div class="chart-title">Por categoría</div><div id="chart-cats"></div></div>
+      <div class="chart-card"><div class="chart-title">Distribución</div>
+        <div class="donut-wrap">
+          <canvas id="donut-canvas" width="120" height="120" style="flex-shrink:0"></canvas>
+          <div class="donut-legend" id="donut-legend"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORÍAS -->
+  <div id="page-categorias" class="page">
+    <div class="page-title">Categorías</div>
+    <div class="page-subtitle">Creá, editá y eliminá tus categorías de gasto</div>
+    <div class="action-bar">
+      <button class="btn btn-primary" onclick="openCatModal(null)">+ Nueva categoría</button>
+    </div>
+    <div class="cat-grid" id="cat-grid"></div>
+  </div>
+
+  <!-- DATOS -->
+  <div id="page-datos" class="page">
+    <div class="page-title">Datos</div>
+    <div class="page-subtitle">Importar y exportar gastos</div>
+    <div class="action-bar">
+      <button class="btn btn-primary" onclick="exportCSV()">⬇ Exportar CSV</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('imp').click()">⬆ Importar CSV</button>
+      <input type="file" id="imp" accept=".csv" style="display:none" onchange="importCSV(this)">
+      <button class="btn btn-ghost" onclick="clearAll()" style="color:var(--danger)">🗑 Borrar todo</button>
+    </div>
+    <div class="chart-card" style="max-width:700px">
+      <div class="chart-title">Todos los registros</div>
+      <div style="overflow-x:auto"><table id="data-table" style="width:100%;border-collapse:collapse;font-size:13px"></table></div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- FAB -->
+<button class="btn-fab" onclick="openExpModal(null)" title="Agregar gasto (N)">＋</button>
+</div><!-- /app-screen -->
+
+<!-- Modal Gasto -->
+<div class="overlay" id="exp-modal">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="exp-modal-title">Nuevo gasto</span>
+      <button class="icon-btn" onclick="closeExpModal()" style="font-size:20px">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descripción</label>
+      <input type="text" class="form-ctrl" id="em-desc" placeholder="Ej: Supermercado" maxlength="60">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Monto ($)</label>
+        <input type="number" class="form-ctrl" id="em-amount" placeholder="0.00" min="0" step="0.01">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Fecha</label>
+        <input type="date" class="form-ctrl" id="em-date">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Categoría</label>
+      <select class="form-ctrl" id="em-cat"></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nota (opcional)</label>
+      <input type="text" class="form-ctrl" id="em-note" placeholder="Detalle adicional..." maxlength="80">
+    </div>
+    <input type="hidden" id="em-id">
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="closeExpModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveExpense()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Categoría -->
+<div class="overlay" id="cat-modal">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="cat-modal-title">Nueva categoría</span>
+      <button class="icon-btn" onclick="closeCatModal()" style="font-size:20px">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nombre</label>
+      <input type="text" class="form-ctrl" id="cm-name" placeholder="Ej: Educación" maxlength="30" oninput="updatePreview()">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Ícono</label>
+      <div class="emoji-grid" id="cm-emojis"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Color</label>
+      <div class="palette" id="cm-palette"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Vista previa</label>
+      <div class="cat-preview">
+        <div class="prev-icon" id="prev-icon"></div>
+        <div>
+          <div id="prev-name" style="font-size:14px;font-weight:600;margin-bottom:3px"></div>
+          <span class="prev-badge" id="prev-badge"></span>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" id="cm-key">
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="closeCatModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveCat()">Guardar categoría</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- SDK de Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/script.js"></script>
+</body>
+</html>
