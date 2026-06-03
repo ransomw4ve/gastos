@@ -689,6 +689,17 @@ function updatePreview(){
 /* ══════════════════════════════════════════════
    INIT
    ══════════════════════════════════════════════ */
+// Al cargar la página, verificar sesión existente
+sb.auth.getSession().then(({ data: { session } }) => {
+  if (session) {
+    currentUser = session.user;
+    showApp();
+    loadAllData();
+  } else {
+    showAuth();
+  }
+});
+
 document.getElementById('exp-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeExpModal();});
 document.getElementById('cat-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeCatModal();});
 document.addEventListener('keydown',e=>{
@@ -708,3 +719,4 @@ if(savedTheme==='dark'){
   const tl=document.getElementById('theme-label');
   if(tl) tl.textContent='Modo claro';
 }
+
