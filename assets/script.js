@@ -707,7 +707,9 @@ if(savedTheme==='dark'){
 }
 
 // Siempre mostrar pantalla de login al cargar
-showAuth();
+sb.auth.signOut().then(() => {
+  showAuth();
+});
 
 sb.auth.onAuthStateChange((event, session) => {
   if(event === 'SIGNED_IN'){
