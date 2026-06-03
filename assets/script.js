@@ -689,9 +689,26 @@ function updatePreview(){
 /* ══════════════════════════════════════════════
    INIT
    ══════════════════════════════════════════════ */
-// Al cargar la página, verificar sesión existente
+document.getElementById('exp-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeExpModal();});
+document.getElementById('cat-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeCatModal();});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeExpModal();closeCatModal();}
+  if(e.key==='n'&&!e.target.matches('input,select,textarea')) openExpModal(null);
+});
+document.getElementById('login-pass')?.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+document.getElementById('login-email')?.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+document.getElementById('reg-pass2')?.addEventListener('keydown', e=>{ if(e.key==='Enter') doRegister(); });
+
+const savedTheme=localStorage.getItem('gastos_theme');
+if(savedTheme==='dark'){
+  document.documentElement.setAttribute('data-theme','dark');
+  const tl=document.getElementById('theme-label');
+  if(tl) tl.textContent='Modo claro';
+}
+
+// Sesión: primero verificar la existente, luego escuchar cambios
 sb.auth.getSession().then(({ data: { session } }) => {
-  if (session) {
+  if(session){
     currentUser = session.user;
     showApp();
     loadAllData();
@@ -700,23 +717,14 @@ sb.auth.getSession().then(({ data: { session } }) => {
   }
 });
 
-document.getElementById('exp-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeExpModal();});
-document.getElementById('cat-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeCatModal();});
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeExpModal();closeCatModal();}
-  if(e.key==='n'&&!e.target.matches('input,select,textarea')) openExpModal(null);
+sb.auth.onAuthStateChange((event, session) => {
+  if(event === 'SIGNED_IN' && !currentUser){
+    currentUser = session.user;
+    showApp();
+    loadAllData();
+  }
+  if(event === 'SIGNED_OUT'){
+    currentUser = null;
+    showAuth();
+  }
 });
-
-// Enter en campos de auth
-document.getElementById('login-pass')?.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
-document.getElementById('login-email')?.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
-document.getElementById('reg-pass2')?.addEventListener('keydown', e=>{ if(e.key==='Enter') doRegister(); });
-
-// Tema guardado
-const savedTheme=localStorage.getItem('gastos_theme');
-if(savedTheme==='dark'){
-  document.documentElement.setAttribute('data-theme','dark');
-  const tl=document.getElementById('theme-label');
-  if(tl) tl.textContent='Modo claro';
-}
-
