@@ -706,19 +706,11 @@ if(savedTheme==='dark'){
   if(tl) tl.textContent='Modo claro';
 }
 
-// Sesión: primero verificar la existente, luego escuchar cambios
-sb.auth.getSession().then(({ data: { session } }) => {
-  if(session){
-    currentUser = session.user;
-    showApp();
-    loadAllData();
-  } else {
-    showAuth();
-  }
-});
+// Siempre mostrar pantalla de login al cargar
+showAuth();
 
 sb.auth.onAuthStateChange((event, session) => {
-  if(event === 'SIGNED_IN' && !currentUser){
+  if(event === 'SIGNED_IN'){
     currentUser = session.user;
     showApp();
     loadAllData();
